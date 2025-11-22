@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HTML Calculator (eval-free)</title>
+  <style>
+    :root{--bg:#f5f7fb;--card:#fff;--accent:#4a4e69;--text:#0f1724}
+    body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);display:flex;align-items:center;justify-content:center;height:100vh}
+    .calc{width:320px;background:var(--card);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(15,15,20,.08)}
+    .display{height:56px;background:#eef2f7;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:1.4rem;display:flex;flex-direction:column;justify-content:center;word-break:break-all}
+    .display .expr{font-size:.9rem;color:#6b7280}
+    .display .result{font-weight:700;font-size:1.2rem}
+    .keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    button{padding:14px;border-radius:8px;border:0;background:#f1f5f9;font-weight:700;font-size:1rem;cursor:pointer}
+    button.op{background:#4a4e69;color:#fff}
+    button.equal{grid-column:span:2;background:#10b981;color:#fff}
+    .wide{grid-column:span 2}
+    .muted{font-size:.85rem;color:#6b7280;margin-top:8px;text-align:center}
+  </style>
+</head>
+<body>
+  <main class="calc" role="application" aria-label="Calculator">
+    <div class="display" aria-live="polite">
+      <div id="expression" class="expr">0</div>
+      <div id="result" class="result">0</div>
+    </div>
+
+    <div class="keys">
+      <button type="button" id="clear">C</button>
+      <button type="button" id="back">⌫</button>
+      <button type="button" id="percent" class="op">%</button>
+      <button type="button" class="op" data-op="/">÷</button>
+
+      <button type="button" data-num="7">7</button>
+      <button type="button" data-num="8">8</button>
+      <button type="button" data-num="9">9</button>
+      <button type="button" class="op" data-op="*">×</button>
+
+      <button type="button" data-num="4">4</button>
+      <button type="button" data-num="5">5</button>
+      <button type="button" data-num="6">6</button>
+      <button type="button" class="op" data-op="-">−</button>
+
+      <button type="button" data-num="1">1</button>
+      <button type="button" data-num="2">2</button>
+      <button type="button" data-num="3">3</button>
+      <button type="button" class="op" data-op="+">+</button>
+
+      <button type="button" class="wide" data-num="0">0</button>
+      <button type="button" data-num=".">.</button>
+      <button type="button" id="equals" class="equal">=</button>
+    </div>
+
+    <div class="muted">Simple calculator — HTML + small JS (no eval)</div>
+  </main>
+
+  <script>
+    let current = "";
+    let previous = null;
+    let operator = null;
+
+    const exprEl = document.getElementById("expression");
+    const resultEl = document.getElementById("result");
+
+    function updateDisplay(){
+      exprEl.textContent = buildExpression();
+      resultEl.textContent = preview();
+    }
+
+    function buildExpression(){
+      if(previous === null && current==="") return "0";
+      if(previous === null) return current;
+      return `${previous} ${operator||""} ${current}`;
+    }
+
+    function preview(){
+      if(previous!==null && current!=="" && operator){
+        const r = compute(previous, Number(current), operator);
+        return r===null ? "Err" : r;
+      }
+      if(current!=="") return current;
+      if(previous!==null) return previous;
+      return "0";
+    }
+
+    function compute(a,b,op){
+      if(!isFinite(a)||!isFinite(b)) return null;
+      switch(op){
+        case "+": return round(a+b);
+        case "-": return round(a-b);
+        case "*": return round(a*b);
+        case "/": return b===0? null: round(a/b);
+        case "%": return round((a*b)/100);
+      }
+      return null;
+    }
+
+    function round(n){
+      if(Number.isInteger(n)) return n;
+      return Math.round(n*100000)/100000;
+    }
+
+    document.querySelectorAll("[data-num]").forEach(b=>{
+      b.onclick=()=>{ 
+        const d=b.dataset.num;
+        if(d==="." && current.includes(".")) return;
+        if(d==="0" && current==="0") return;
+        if(d!=="." && current==="0") current=d;
+        else current+=d;
+        updateDisplay();
+      };
+    });
+
+    document.querySelectorAll("[data-op]").forEach(b=>{
+      b.onclick=()=>{
+        const op=b.dataset.op;
+        if(current==="" && previous===null) return;
+        if(previous===null){
+          previous = Number(current||0);
+          current=""; operator=op;
+        }
+        else if(current===""){
+          operator = op;
+        }
+        else{
+          const r=compute(previous, Number(current), operator);
+          if(r===null){ exprEl.textContent="Error"; resultEl.textContent="Error"; previous=null;current="";operator=null; return; }
+          previous=r; current=""; operator=op;
+        }
+        updateDisplay();
+      };
+    });
+
+    document.getElementById("equals").onclick=()=>{
+      if(previous===null||current===""||!operator){ updateDisplay(); return; }
+      const r=compute(previous, Number(current), operator);
+      if(r===null){ exprEl.textContent="Error"; resultEl.textContent="Error"; previous=null;current="";operator=null; return; }
+      exprEl.textContent=`${previous} ${operator} ${current} =`;
+      resultEl.textContent=r;
+      previous=r; current=""; operator=null;
+    };
+
+    document.getElementById("clear").onclick=()=>{
+      previous=null; current=""; operator=null; updateDisplay();
+    };
+
+    document.getElementById("back").onclick=()=>{
+      if(current!=="") current=current.slice(0,-1);
+      else if(operator) operator=null;
+      else if(previous!==null) previous=null;
+      updateDisplay();
+    };
+
+    document.getElementById("percent").onclick=()=>{
+      if(previous===null||current==="") return;
+      const r=compute(previous, Number(current), "%");
+      if(r===null){ resultEl.textContent="Error"; return; }
+      exprEl.textContent = `${previous} % ${current} =`;
+      resultEl.textContent = r;
+      previous=r; current=""; operator=null;
+    };
+
+    updateDisplay();
+  </script>
+</body>
+</html>

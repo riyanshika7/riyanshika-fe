@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="REG.css">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>College Registration Form</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#f7f8fb;padding:20px}
+    form{max-width:700px;margin:auto;background:#fff;padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+    label{display:block;margin-top:12px;font-weight:600}
+    input,select,textarea{width:100%;padding:10px;margin-top:6px;border-radius:6px;border:1px solid #ddd}
+    fieldset{margin-top:12px;padding:12px;border-radius:8px}
+    input[type=submit]{background:#4a4e69;color:#fff;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;margin-top:12px}
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center">College Registration Form</h1>
+  <form action="#" method="post" enctype="multipart/form-data" aria-label="College registration">
+    <label for="fullname">Full Name</label><input id="fullname" name="fullname" type="text" required>
+
+    <label for="email">Email</label><input id="email" name="email" type="email" required>
+
+    <label for="roll">Roll Number</label><input id="roll" name="roll" type="text" required>
+
+    <label for="branch">Branch</label>
+    <select id="branch" name="branch" required>
+      <option value="">--Select Branch--</option>
+      <option>CSE</option>
+      <option>DSE</option>
+      <option>VLSI</option>
+      <option>EE</option>
+      <option>ECE</option>
+      <option>ME</option>
+    </select>
+
+    <label>Gender</label>
+    <label><input type="radio" name="gender" value="male" required> Male</label>
+    <label><input type="radio" name="gender" value="female"> Female</label>
+    <label><input type="radio" name="gender" value="other"> Other</label>
+
+    <label>Interests</label>
+    <label><input type="checkbox" name="interest" value="coding"> Coding</label>
+    <label><input type="checkbox" name="interest" value="design"> Design</label>
+    <label><input type="checkbox" name="interest" value="sports"> Sports</label>
+
+    <label for="city">City</label>
+    <input list="cities" id="city" name="city" placeholder="Type or select a city">
+    <datalist id="cities">
+      <option value="Jalandhar"></option>
+      <option value="Ludhiana"></option>
+      <option value="Amritsar"></option>
+    </datalist>
+
+    <fieldset>
+      <legend>Upload Documents</legend>
+      <label for="photo">Photo (jpg/png)</label><input id="photo" name="photo" type="file" accept="image/*">
+      <label for="marksheet">12th Marksheet (pdf)</label><input id="marksheet" name="marksheet" type="file" accept=".pdf">
+    </fieldset>
+
+    <label for="remarks">Any remarks</label><textarea id="remarks" name="remarks" rows="4"></textarea>
+
+    <input type="submit" value="Submit Registration">
+  </form>
+</body>
+</html>

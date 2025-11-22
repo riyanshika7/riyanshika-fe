@@ -1,0 +1,100 @@
+/* Global Styling */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #eef1f7, #dfe3ee);
+  padding: 20px;
+}
+
+/* Form Container */
+form {
+  max-width: 750px;
+  margin: auto;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Heading */
+h1 {
+  text-align: center;
+  color: #333;
+  letter-spacing: 1px;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 600;
+  color: #444;
+}
+
+/* Inputs, Select, Textarea */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: 0.3s ease;
+  font-size: 15px;
+}
+
+/* Input Hover/Focus */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #4a4e69;
+  box-shadow: 0 0 6px rgba(74, 78, 105, 0.3);
+  outline: none;
+}
+
+/* Fieldset */
+fieldset {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+  background: #fafafa;
+}
+
+legend {
+  padding: 0 10px;
+  font-weight: bold;
+  color: #4a4e69;
+}
+
+/* Radio & Checkbox Inline Labels */
+input[type="radio"],
+input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+/* Submit Button */
+input[type="submit"] {
+  background: #4a4e69;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 16px;
+  width: 100%;
+  transition: 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background: #30344d;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
